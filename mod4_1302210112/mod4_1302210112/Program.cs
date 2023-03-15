@@ -2,6 +2,8 @@
 
 
 
+using static Program;
+
 internal class Program
 {
     public enum buah
@@ -16,6 +18,9 @@ internal class Program
         kelapa,
         jagung
     }
+    public enum posisi { jongkok,berdiri,terbang,tengkurap}
+    public enum Triger { tombolS,tombolW,tombolX }
+    posisi saatIni = posisi.berdiri;
     public static string getKode(buah b)
     {
         string[] kdbuah =
@@ -24,11 +29,47 @@ internal class Program
         };
         return kdbuah[(int)b];
     }
+    public class transisi
+    {
+        public posisi awal;
+        public posisi next;
+        public Triger triger;
+        public transisi(posisi awal, posisi next,Triger triger) 
+        { 
+            this.next = next;
+            this.awal = awal;
+            this.triger = triger;
+        }
+        transisi[] Transisi =
+        {
+             new transisi(posisi.tengkurap, posisi.jongkok, Triger.tombolW),
+            new transisi(posisi.jongkok, posisi.tengkurap, Triger.tombolS),
+            new transisi(posisi.berdiri,posisi.terbang, Triger.tombolW),
+            new transisi(posisi.terbang,posisi.berdiri,Triger.tombolS),
+            new transisi(posisi.terbang,posisi.jongkok,Triger.tombolX),
+            new transisi(posisi.berdiri,posisi.jongkok,Triger.tombolS),
+           new transisi(posisi.jongkok,posisi.berdiri,Triger.tombolX),
+        };
+       
+    }
+    public posisi berikut(posisi awal, Triger triger)
+    {
+        posisi akhir = awal;
+        for (int i = 0; i < Transisi.Length; i++)
+        {
+            transisi berubah = Transisi[i];
+            if (awal == berubah.awal && triger == berubah.triger)
+            {
+                akhir = berubah.akhir;
+            }
+        }
+        return akhir;
+    }
 
     private static void Main(string[] args)
     {
         
         buah b=buah.apel;
-        Console.WriteLine("buah" + b + "kode buah" + getKode(b);
+        Console.WriteLine("buah" + b + "kode buah" + getKode(b));
     }
 }
